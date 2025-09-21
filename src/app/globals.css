@@ -115,9 +115,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-[#729633] text-foreground;
-    font-family: ;
-    
+    @apply bg-[#729633] text-foreground;  
   }
 }
 

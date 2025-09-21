@@ -8,33 +8,29 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   //estados
-  const [costLiter, setCostLiter] = useState("");
-  const [mlUsed, setMlUsed] = useState("");
-  const [hourlyLightCost, setHourlyLightCost] = useState("");
-  const [hours, setHours] = useState("");
-  const [maintenanceCostHours, setMaintenanceCostHours] = useState("");
-  const [margin, setMargin] = useState("");
-  const [totalCost, setTotalCost] = useState(null);
-  const [resinCostState, setResinCostState] = useState(0);
-  const [electricityCostState, setElectricityCostState] = useState(0);
-  const [maintenanceCostState, setMaintenanceCostState] = useState(0);
+  const [costLiter, setCostLiter] = useState<string>("");
+const [mlUsed, setMlUsed] = useState<string>("");
+const [hourlyLightCost, setHourlyLightCost] = useState<string>("");
+const [hours, setHours] = useState<string>("");
+const [maintenanceCostHours, setMaintenanceCostHours] = useState<string>("");
+const [margin, setMargin] = useState<string>("");
 
+const [resinCostState, setResinCostState] = useState<string>("0");
+const [electricityCostState, setElectricityCostState] = useState<string>("0");
+const [maintenanceCostState, setMaintenanceCostState] = useState<string>("0");
+type TotalCostType = { totalCost: string; finalPrice: string };
+const [totalCost, setTotalCost] = useState<TotalCostType | null>(null);
   //calcular
   const calculate = () => {
     //obtener el valor del costo de resina
-    const resinCost =
-      (parseFloat(costLiter || 0) / 1000) * parseFloat(mlUsed || 0);
-    //obtener el valor del costo de luz
-    const electricityCost =
-      parseFloat(hourlyLightCost || 0) * parseFloat(hours || 0);
-    //obtener el valor del mantenimiento
-    const maintenanceCost =
-      parseFloat(maintenanceCostHours || 0) * parseFloat(hours || 0);
+    const resinCost = (parseFloat(costLiter) || 0) / 1000 * (parseFloat(mlUsed) || 0);
+const electricityCost = (parseFloat(hourlyLightCost) || 0) * (parseFloat(hours) || 0);
+const maintenanceCost = (parseFloat(maintenanceCostHours) || 0) * (parseFloat(hours) || 0);
 
     //obtener el costo total
     const totalCost = resinCost + electricityCost + maintenanceCost;
     //establecer precio final
-    const finalPrice = totalCost * (1 + parseFloat(margin || 0) / 100);
+    const finalPrice = totalCost * (1 + parseFloat(margin || "0") / 100);
 
     setResinCostState(resinCost.toFixed(2));
     setElectricityCostState(electricityCost.toFixed(2));
