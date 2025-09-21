@@ -1,103 +1,138 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  //estados
+  const [costLiter, setCostLiter] = useState("");
+  const [mlUsed, setMlUsed] = useState("");
+  const [hourlyLightCost, setHourlyLightCost] = useState("");
+  const [hours, setHours] = useState("");
+  const [maintenanceCostHours, setMaintenanceCostHours] = useState("");
+  const [margin, setMargin] = useState("");
+  const [totalCost, setTotalCost] = useState(null);
+  const [resinCostState, setResinCostState] = useState(0);
+  const [electricityCostState, setElectricityCostState] = useState(0);
+  const [maintenanceCostState, setMaintenanceCostState] = useState(0);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  //calcular
+  const calculate = () => {
+    //obtener el valor del costo de resina
+    const resinCost =
+      (parseFloat(costLiter || 0) / 1000) * parseFloat(mlUsed || 0);
+    //obtener el valor del costo de luz
+    const electricityCost =
+      parseFloat(hourlyLightCost || 0) * parseFloat(hours || 0);
+    //obtener el valor del mantenimiento
+    const maintenanceCost =
+      parseFloat(maintenanceCostHours || 0) * parseFloat(hours || 0);
+
+    //obtener el costo total
+    const totalCost = resinCost + electricityCost + maintenanceCost;
+    //establecer precio final
+    const finalPrice = totalCost * (1 + parseFloat(margin || 0) / 100);
+
+    setResinCostState(resinCost.toFixed(2));
+    setElectricityCostState(electricityCost.toFixed(2));
+    setMaintenanceCostState(maintenanceCost.toFixed(2));
+
+    setTotalCost({
+      totalCost: totalCost.toFixed(2),
+      finalPrice: finalPrice.toFixed(2),
+    });
+
+    //  Mostrar en consola
+    console.log("Costo resina:", resinCost);
+    console.log("Costo electricidad:", electricityCost);
+    console.log("Costo mantenimiento:", maintenanceCost);
+    console.log("Costo total:", totalCost);
+    console.log("Precio final:", finalPrice);
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto p-6 space-y-6">
+      <Card className="bg-[#f1f1f1]">
+        <CardContent className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-sm text-lime-600">Costo de resina por litro</label>
+            <Input
+            className="bg-white"
+              value={costLiter}
+              onChange={(e) => setCostLiter(e.target.value)}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          </div>
+          <div>
+            <label className="text-sm text-lime-600">Mililitros usados</label>
+            <Input  className="bg-white" value={mlUsed} onChange={(e) => setMlUsed(e.target.value)} />
+          </div>
+          <div>
+            <label className="text-sm text-lime-600">Costo de electricidad por hora</label>
+            <Input
+            className="bg-white"
+              value={hourlyLightCost}
+              onChange={(e) => setHourlyLightCost(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="text-sm text-lime-600">Horas de impresion</label>
+            <Input className="bg-white" value={hours} onChange={(e) => setHours(e.target.value)} />
+          </div>
+          <div>
+            <label className="text-sm text-lime-600">Costo mantenimiento por hora</label>
+            <Input
+              className="bg-white"
+              value={maintenanceCostHours}
+              onChange={(e) => setMaintenanceCostHours(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="text-sm text-lime-600">Margen de ganancia</label>
+            <Input className="bg-white" value={margin} onChange={(e) => setMargin(e.target.value)} />
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-evenly">
+          <Button onClick={calculate} variant="outline">
+            Calcular
+          </Button>
+        </CardFooter>
+      </Card>
+      <Card>
+        <CardContent className="text-center">
+          <label className="text-sky-800">
+            Estimado <label className="text-lime-600"> ${totalCost?.finalPrice ? totalCost.finalPrice : 0}</label> por
+            impresion
+          </label>
+          <div className="mt-7 after:border-border relative after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"></div>
+          <div className="grid grid-cols-4 pt-5">
+            <div className="border-r border-gray-300/50 px-4">
+              <label className="flex flex-col pt-5 text-sky-800 ">${resinCostState}</label>
+              <label className="flex flex-col pb-5">Resina</label>
+            </div>
+            <div className="border-r border-gray-300/50 px-4">
+              <label className="flex flex-col pt-5 text-sky-800">
+                ${electricityCostState}
+              </label>
+              <label className="flex flex-col pb-5">Electricidad</label>
+            </div>
+            <div className="border-r border-gray-300/50 px-4">
+              <label className="flex flex-col pt-5 text-sky-800">
+                ${maintenanceCostState}
+              </label>
+              <label className="flex flex-col pb-5">Mantenimiento</label>
+            </div>
+            <div className="px-4">
+              <label className="flex flex-col pt-5 text-sky-800">
+                ${totalCost?.totalCost ? totalCost.totalCost : 0}
+              </label>
+              <label className="flex flex-col pb-5">Total</label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
